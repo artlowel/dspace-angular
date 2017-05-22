@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HostWindowService } from "../shared/host-window.service";
 
 @Component({
   selector: 'ds-home',
@@ -6,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
-  constructor() {
+
+  constructor(
+    private hws: HostWindowService
+  ) {
     this.universalInit();
   }
 

@@ -7,6 +7,7 @@ import { TopLevelCommunityListComponent } from "./top-level-community-list/top-l
 import { HomeNewsComponent } from "./home-news/home-news.component";
 import { RouterModule } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
+import { HostWindowService } from "../shared/host-window.service";
 
 @NgModule({
   imports: [
@@ -19,6 +20,9 @@ import { TranslateModule } from "@ngx-translate/core";
     HomeComponent,
     TopLevelCommunityListComponent,
     HomeNewsComponent
+  ],
+  providers: [
+    HostWindowService
   ]
 })
 export class HomeModule { }
