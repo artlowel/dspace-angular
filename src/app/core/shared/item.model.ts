@@ -4,6 +4,7 @@ import { RemoteData } from "../data/remote-data";
 import { Bundle } from "./bundle.model";
 import { Bitstream } from "./bitstream.model";
 import { Observable } from "rxjs";
+import { hasValue } from "../../shared/empty.util";
 
 export class Item extends DSpaceObject {
 
@@ -30,14 +31,14 @@ export class Item extends DSpaceObject {
     /**
      * An array of Collections that are direct parents of this Item
      */
-    parents: Array<RemoteData<Collection>>;
+    parents: RemoteData<Collection[]>;
 
     /**
      * The Collection that owns this Item
      */
     owner: Collection;
 
-    bundles: Array<RemoteData<Bundle>>;
+    bundles: RemoteData<Bundle[]>;
 
     getThumbnail(): Observable<Bitstream> {
         const bundle: Observable<Bundle> = this.getBundle("THUMBNAIL");
@@ -53,28 +54,21 @@ export class Item extends DSpaceObject {
         );
     }
 
-    getFiles(): Observable<Array<Observable<Bitstream>>> {
+    getFiles(): Observable<Bitstream[]> {
         const bundle: Observable <Bundle> = this.getBundle("ORIGINAL");
-        return bundle.map(bundle => {
-            if (bundle != null) {
-                return bundle.bitstreams.map(bitstream => bitstream.payload)
-            }
-        });
+        return bundle
+          .filter(bundle => hasValue(bundle))
+          .flatMap(bundle => bundle.bitstreams.payload);
     }
 
     getBundle(name: String): Observable<Bundle> {
-        return Observable.combineLatest(
-            ...this.bundles.map(b => b.payload),
-            (...bundles: Array<Bundle>) => bundles)
+        return this.bundles.payload
+            .filter(bundles => hasValue(bundles))
             .map(bundles => {
                 return bundles.find((bundle: Bundle) => {
                     return bundle.name === name
                 });
             });
-    }
-
-    getCollections(): Array<Observable<Collection>> {
-        return this.parents.map(collection => collection.payload.map(parent => parent));
     }
 
 }
