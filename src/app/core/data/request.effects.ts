@@ -128,7 +128,7 @@ export class RequestEffects {
       const normObjConstructor = NormalizedObjectFactory.getConstructor(type);
 
       if (hasValue(normObjConstructor)) {
-        const serializer = new DSpaceRESTv2Serializer(normObjConstructor);
+        const serializer = new DSpaceRESTv2Serializer(normObjConstructor, this.EnvConfig);
 
         let processed;
         if (isNotEmpty(obj._embedded)) {
@@ -171,7 +171,7 @@ export class RequestEffects {
 
   protected processPageInfo(pageObj: any): PageInfo {
     if (isNotEmpty(pageObj)) {
-      return new DSpaceRESTv2Serializer(PageInfo).deserialize(pageObj);
+      return new DSpaceRESTv2Serializer(PageInfo, this.EnvConfig).deserialize(pageObj);
     }
     else {
       return undefined;

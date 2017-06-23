@@ -4,6 +4,8 @@ import { DSpaceRESTV2Response } from "./dspace-rest-v2-response.model";
 import { DSpaceRESTv2Validator } from "./dspace-rest-v2.validator";
 import { GenericConstructor } from "../shared/generic-constructor";
 import { hasNoValue, hasValue } from "../../shared/empty.util";
+import { EnvConfig, GLOBAL_CONFIG, GlobalConfig } from '../../../config';
+import { Inject } from "@angular/core";
 
 /**
  * This Serializer turns responses from v2 of DSpace's REST API
@@ -17,7 +19,10 @@ export class DSpaceRESTv2Serializer<T> implements Serializer<T> {
    * @param modelType a class or interface to indicate
    * the kind of model this serializer should work with
    */
-  constructor(private modelType: GenericConstructor<T>) {
+  constructor(
+    private modelType: GenericConstructor<T>,
+    private EnvConfig: GlobalConfig
+  ) {
   }
 
   /**
@@ -80,14 +85,20 @@ export class DSpaceRESTv2Serializer<T> implements Serializer<T> {
     for (let link in normalizedLinks) {
       if (Array.isArray(normalizedLinks[link])) {
         normalizedLinks[link] = normalizedLinks[link].map(linkedResource => {
-          return linkedResource.href;
+          return this.replaceProtocol(linkedResource.href);
         });
       }
       else {
-        normalizedLinks[link] = normalizedLinks[link].href;
+        normalizedLinks[link] = this.replaceProtocol(normalizedLinks[link].href);
       }
     }
     return normalizedLinks;
+  }
+
+  private replaceProtocol(link:string):string {
+    const baseUrl:string = EnvConfig.rest.baseUrl;
+    const wrongBaseUrl:string = baseUrl.replace("https","http");
+    return link.replace(wrongBaseUrl, baseUrl);
   }
 
 }
