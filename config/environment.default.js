@@ -22,7 +22,7 @@ module.exports = {
   },
   "universal": {
     // Angular Universal settings
-    "preboot": true,
+    "preboot": false,
     "async": true
   }
 };
