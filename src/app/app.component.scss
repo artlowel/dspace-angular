@@ -1,3 +1,10 @@
+@import '../styles/variables.scss';
+@import '../../node_modules/bootstrap/scss/variables';
+
+.item-page {
+  margin-bottom: $spacer-y;
+}
+
 // Sticky Footer
 .outer-wrapper {
   display: flex;
@@ -14,4 +21,6 @@
 
 .main-content {
   flex: 1 0 auto;
+  margin-top: $spacer-y;
+  margin-bottom: $spacer-y;
 }
