@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
-import { StoreModule } from '@ngrx/store';
+import { StoreModule, MetaReducer } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { storeFreeze } from 'ngrx-store-freeze';
 
-import { appReducers } from './app.reducer';
+import { appReducers, AppState } from './app.reducer';
 import { appEffects } from './app.effects';
 
 import { CoreModule } from './core/core.module';
@@ -32,6 +33,8 @@ export function getConfig() {
   return ENV_CONFIG;
 }
 
+const metaReducers: Array<MetaReducer<AppState>> = !getConfig().production ? [...appMetaReducers, storeFreeze] : appMetaReducers;
+
 @NgModule({
   imports: [
     SharedModule,
@@ -44,8 +47,8 @@ export function getConfig() {
     CollectionPageModule,
     CommunityPageModule,
     AppRoutingModule,
-    StoreModule.forRoot(appReducers, { metaReducers: appMetaReducers }),
-    StoreDevtoolsModule.instrument({ maxAge: 50 }),
+    StoreModule.forRoot(appReducers, { metaReducers }),
+    !getConfig().production ? StoreDevtoolsModule.instrument({ maxAge: 50 }) : [],
     EffectsModule.forRoot(appEffects)
   ],
   providers: [

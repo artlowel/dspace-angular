@@ -157,6 +157,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-webdriver-launcher": "1.0.5",
     "karma-webpack": "2.0.4",
+    "ngrx-store-freeze": "^0.2.0",
     "node-sass": "4.5.3",
     "nodemon": "1.11.0",
     "npm-run-all": "4.0.2",
